@@ -11,3 +11,8 @@ body {
 .ui.main.container {
   margin-top: 7em;
 }
+
+.sub {
+  color: blue;
+  border-radius: 5px;
+}

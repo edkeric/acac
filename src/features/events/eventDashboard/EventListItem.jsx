@@ -2,17 +2,17 @@ import React from 'react'
 import { Button, Icon, Item, List, Segment } from 'semantic-ui-react'
 import EventListAtt from './EventListAtt'
 
-export default function EventListItem() {
+export default function EventListItem({event}) {
     return (
         <Segment.Group>
             <Segment>
                 <Item.Group>
                     <Item>
-                        <Item.Image size='tiny' circular src='/assets/user.png' />
+                        <Item.Image size='tiny' circular src={event.hostPhotoURL} />
                         <Item.Content>
-                            <Item.Header content='Event Title' />
+                            <Item.Header content={event.title} />
                             <Item.Description>
-                                Hosted by Cunt
+                                Hosted by {event.hostedBy}
                             </Item.Description>
                         </Item.Content>
                     </Item>
@@ -21,19 +21,21 @@ export default function EventListItem() {
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' /> Date
-                    <Icon name='marker' /> Place
+                    <Icon name='clock' /> {event.date}
+                    <Icon name='marker' /> {event.venue}
                 </span>
             </Segment>
             <Segment secondary>
-              <List>
-                  <EventListAtt />
-                  <EventListAtt />
-                  <EventListAtt />
+              <List horizontal>
+                  {event.att.map(att => (
+                      <EventListAtt key={att.id} att={att} />
+                  ))}
               </List>
+                  
+                
             </Segment>
             <Segment clearing>
-                <div>Event Description</div>
+                <div>{event.description}</div>
                 <Button color='black' floated='right' content='View' />
             </Segment>
 
