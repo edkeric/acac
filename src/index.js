@@ -5,7 +5,13 @@ import './app/layout/styles.css'
 import App from './app/layout/App'
 
 import reportWebVitals from './reportWebVitals'
+import { BrowserRouter } from 'react-router-dom'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('root')
+)
 
 reportWebVitals()

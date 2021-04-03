@@ -16,3 +16,16 @@ body {
   color: blue;
   border-radius: 5px;
 }
+
+.motorhead {
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(315deg, #756213 0%, #000000 74%) !important;
+  height: 100vh;
+  border-radius: 30px;
+}
+
+.motorhead h1.ui.header {
+  font-size: 4em;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
