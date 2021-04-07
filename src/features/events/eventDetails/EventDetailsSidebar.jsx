@@ -1,7 +1,7 @@
 import React from 'react'
 import { Item, Segment } from 'semantic-ui-react'
 
-export default function EventDetailsSidebar() {
+export default function EventDetailsSidebar({ att }) {
   return (
     <>
       <Segment
@@ -12,26 +12,23 @@ export default function EventDetailsSidebar() {
         inverted
         color='teal'
       >
-        2 People Going
+        {att.length} {att.length > 1 ? 'People' : 'Person'} Going
       </Segment>
       <Segment attached>
         <Item.Group relaxed divided>
-          <Item style={{ position: 'relative' }}>
-            <Item.Image size='tiny' src='/assets/user.png' />
-            <Item.Content verticalAlign='middle'>
-              <Item.Header as='h3'>
-                <span>Suleiman</span>
-              </Item.Header>
-            </Item.Content>
-          </Item>
-          <Item style={{ position: 'relative' }}>
-            <Item.Image size='tiny' src='/assets/user.png' />
-            <Item.Content verticalAlign='middle'>
-              <Item.Header as='h3'>
-                <span>Mustapha</span>
-              </Item.Header>
-            </Item.Content>
-          </Item>
+          {att.map((att) => (
+            <Item key={att.id} style={{ position: 'relative' }}>
+              <Item.Image
+                size='tiny'
+                src={att.photoURL || '/assets/user.png'}
+              />
+              <Item.Content verticalAlign='middle'>
+                <Item.Header as='h3'>
+                  <span>{att.displayName}</span>
+                </Item.Header>
+              </Item.Content>
+            </Item>
+          ))}
         </Item.Group>
       </Segment>
     </>
