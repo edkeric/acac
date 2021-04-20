@@ -2,7 +2,7 @@ export const sampleData = [
   {
     id: '1',
     title: 'Trip to Empire Shit building',
-    date: '11.09.2021',
+    date: new Date('11.09.2021'),
     category: 'drugs',
     description: 'Demolish the fucking building.',
     city: 'NY, USA',
@@ -25,7 +25,7 @@ export const sampleData = [
   {
     id: '2',
     title: 'Trip to Punch and Judy Pub',
-    date: '31.02.2020',
+    date: new Date('11.02.2022'),
     category: 'drinks',
     description: 'Get pissed innit.',
     city: 'London, UK',

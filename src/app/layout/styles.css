@@ -12,6 +12,10 @@ body {
   margin-top: 7em;
 }
 
+.react-datepicker-wrapper {
+  width: 100;
+}
+
 .sub {
   color: blue;
   border-radius: 5px;
