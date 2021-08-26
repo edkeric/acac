@@ -5,12 +5,12 @@ import 'firebase/auth'
 import 'firebase/storage'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAoPwJLOohpv3OuKl5_ZrxZq-lP9v0J-WM',
-  authDomain: 'eventsss-24d16.firebaseapp.com',
-  projectId: 'eventsss-24d16',
-  storageBucket: 'eventsss-24d16.appspot.com',
-  messagingSenderId: '445764556276',
-  appId: '1:445764556276:web:db7071d78a4d32501f95a1',
+  apiKey: 'AIzaSyDt5emgPQplZqIrHuA_86RsQGyNd-NA_f0',
+  authDomain: 'eventcuntz.firebaseapp.com',
+  projectId: 'eventcuntz',
+  storageBucket: 'eventcuntz.appspot.com',
+  messagingSenderId: '292175626160',
+  appId: '1:292175626160:web:a70b9386a4e8d5b617e075',
 }
 
 firebase.initializeApp(firebaseConfig)
