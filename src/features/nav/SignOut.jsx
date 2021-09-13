@@ -14,6 +14,7 @@ export default function SignOut({ setAuth }) {
         content='Login'
       />
       <Button
+        onClick={() => dispatch(openModal({ modalType: 'RegisterForm' }))}
         basic
         inverted
         content='Register'
