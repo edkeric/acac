@@ -1,4 +1,3 @@
-import cuid from 'cuid'
 import firebase from '../config/firebase'
 
 const db = firebase.firestore()
@@ -21,8 +20,21 @@ export function dataFromSnapshot(snapshot) {
   }
 }
 
-export function listenToEventsFromFirestore() {
-  return db.collection('events').orderBy('date')
+export function listenToEventsFromFirestore(predicate) {
+  const user = firebase.auth().currentUser
+  let eventsRef = db.collection('events').orderBy('date')
+  switch (predicate.get('filter')) {
+    case 'isGoing':
+      return eventsRef
+        .where('attIds', 'array-contains', user.uid)
+        .where('date', '>=', predicate.get('startDate'))
+    case 'isHost':
+      return eventsRef
+        .where('hostuid', '==', user.uid)
+        .where('date', '>=', predicate.get('startDate'))
+    default:
+      return eventsRef.where('date', '>=', predicate.get('startDate'))
+  }
 }
 
 export function listenToEventFromFirestore(eventId) {
@@ -30,15 +42,18 @@ export function listenToEventFromFirestore(eventId) {
 }
 
 export function addEventToFirestore(event) {
+  const user = firebase.auth().currentUser
   return db.collection('events').add({
     ...event,
-    hostedBy: 'Cuntogan',
-    hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
+    hostUid: user.uid,
+    hostedBy: user.displayName,
+    hostPhotoURL: user.photoURL || null,
     att: firebase.firestore.FieldValue.arrayUnion({
-      id: cuid(),
-      displayName: 'Cuntogan',
-      photoURL: 'https://randomuser.me/api/portraits/women/42.jpg',
+      id: user.uid,
+      displayName: user.displayName,
+      photoURL: user.photoURL || null,
     }),
+    attIds: firebase.firestore.FieldValue.arrayUnion(user.uid),
   })
 }
 export function updateEventInFirestore(event) {
@@ -82,5 +97,106 @@ export async function updateUserProfile(profile) {
     return await db.collection('users').doc(user.uid).update(profile)
   } catch (error) {
     throw error
+  }
+}
+
+export async function updateUserProfilePhoto(downloadURL, filename) {
+  const user = firebase.auth().currentUser
+  const userDocRef = db.collection('users').doc(user.uid)
+  try {
+    const userDoc = await userDocRef.get()
+    if (!userDoc.data().photoURL) {
+      await db.collection('users').doc(user.uid).update({
+        photoURL: downloadURL,
+      })
+      await user.updateProfile({
+        photoURL: downloadURL,
+      })
+    }
+    return await db.collection('users').doc(user.uid).collection('photos').add({
+      name: filename,
+      url: downloadURL,
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export function getUserPhotos(userUid) {
+  return db.collection('users').doc(userUid).collection('photos')
+}
+
+export async function setMainPhoto(photo) {
+  const user = firebase.auth().currentUser
+  try {
+    await db.collection('users').doc(user.uid).update({
+      photoURL: photo.url,
+    })
+    return await user.updateProfile({
+      photoURL: photo.url,
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export function deletePhotoFromCollection(photoId) {
+  const userUid = firebase.auth().currentUser.uid
+  return db
+    .collection('users')
+    .doc(userUid)
+    .collection('photos')
+    .doc(photoId)
+    .delete()
+}
+
+export function addUserAtt(event) {
+  const user = firebase.auth().currentUser
+  return db
+    .collection('events')
+    .doc(event.id)
+    .update({
+      att: firebase.firestore.FieldValue.arrayUnion({
+        id: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL || null,
+      }),
+      attIds: firebase.firestore.FieldValue.arrayUnion(user.uid),
+    })
+}
+
+export async function cancelUserAtt(event) {
+  const user = firebase.auth().currentUser
+  try {
+    const eventDoc = await db.collection('events').doc(event.id).get()
+    return db
+      .collection('events')
+      .doc(event.id)
+      .update({
+        attIds: firebase.firestore.FieldValue.arrayRemove(user.uid),
+        att: eventDoc.data().att.filter((att) => att.id !== user.uid),
+      })
+  } catch (error) {
+    throw error
+  }
+}
+
+export function getUserEventsQuery(activeTab, userUid) {
+  let eventsRef = db.collection('events')
+  const today = new Date()
+  switch (activeTab) {
+    case 1: // past events
+      return eventsRef
+        .where('attIds', 'array-contains', userUid)
+        .where('date', '<=', today)
+        .orderBy('date', 'desc')
+
+    case 2: //hosting
+      return eventsRef.where('hostUid', '==', userUid).orderBy('date')
+    default:
+      return eventsRef
+        .where('attIds', 'array-contains', userUid)
+        .where('date', '>=', today)
+        .orderBy('date')
   }
 }

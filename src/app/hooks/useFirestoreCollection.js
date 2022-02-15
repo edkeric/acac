@@ -9,6 +9,7 @@ import { dataFromSnapshot } from '../firestore/firestoreService'
 
 export default function useFirestoreCollection({ query, data, deps }) {
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(asyncActionStart())
     const unsubscribe = query().onSnapshot(
@@ -17,7 +18,7 @@ export default function useFirestoreCollection({ query, data, deps }) {
         data(docs)
         dispatch(asyncActionFinish())
       },
-      (error) => dispatch(asyncActionError())
+      (error) => dispatch(asyncActionError(error))
     )
     return () => {
       unsubscribe()

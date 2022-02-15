@@ -1,7 +1,8 @@
 import React from 'react'
-import { Item, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Item, Label, Segment } from 'semantic-ui-react'
 
-export default function EventDetailsSidebar({ att }) {
+export default function EventDetailsSidebar({ att, hostUid }) {
   return (
     <>
       <Segment
@@ -17,7 +18,20 @@ export default function EventDetailsSidebar({ att }) {
       <Segment attached>
         <Item.Group relaxed divided>
           {att.map((att) => (
-            <Item key={att.id} style={{ position: 'relative' }}>
+            <Item
+              as={Link}
+              to={`/profile/${att.id}`}
+              key={att.id}
+              style={{ position: 'relative' }}
+            >
+              {hostUid === att.id && (
+                <Label
+                  style={{ position: 'absolute' }}
+                  color='yellow'
+                  ribbon='right'
+                  content='Host'
+                />
+              )}
               <Item.Image
                 size='tiny'
                 src={att.photoURL || '/assets/user.png'}

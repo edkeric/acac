@@ -23,9 +23,9 @@ export default function SignIn() {
       <Image
         avatar
         spaced='right'
-        src={currentUserProfile.photoURL || '/assets/user.png'}
+        src={currentUserProfile?.photoURL || '/assets/user.png'}
       />
-      <Dropdown pointing='top left' text={currentUserProfile.displayName}>
+      <Dropdown pointing='top left' text={currentUserProfile?.displayName}>
         <Dropdown.Menu>
           <Dropdown.Item
             as={Link}
